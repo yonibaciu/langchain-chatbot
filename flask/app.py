@@ -1,15 +1,14 @@
 from flask import Flask
 from flask import request
+from flask import jsonify
 import os
-import openai
 from pinecone import Pinecone
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Pinecone as PineconeStore
-from langchain_community.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
+from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 
@@ -62,23 +61,28 @@ def load_example_docs():
 
   return "<p>Documents loaded!</p>"
 
-@app.route("/load_webpage")
+@app.route("/load_webpage", methods = ['POST'])
 def load_webpage():
-  page_url = q = request.args.get('url', '')
+  data = request.json
+  page_url = data.get('url')
+  print(page_url)
   loader = WebBaseLoader(page_url)
-  data = loader.load()
+  docs = loader.load()
 
   # Split
   text_splitter = RecursiveCharacterTextSplitter(
       chunk_size = 1500,
       chunk_overlap = 150
   )
-  splits = text_splitter.split_documents(data)
+  splits = text_splitter.split_documents(docs)
 
   vectorstore.add_documents(splits)
 
-  return "<p>Webpage loaded!</p>"
-  
+  return jsonify(status='Webpage loaded')
+
+@app.route("/check")
+def check():
+  return jsonify(status='OK')
 
 @app.route("/question")
 def question():
