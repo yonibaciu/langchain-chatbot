@@ -34,3 +34,6 @@ flask run --port=5001
 ```
 npm run dev
 ```
+
+![Screenshot 2024-02-07 at 8 37 02 PM](https://github.com/yonibaciu/langchain-chatbot/assets/160115/ba9a6812-ea63-4e71-ac7a-93844a84519d)
+
