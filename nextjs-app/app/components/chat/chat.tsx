@@ -1,7 +1,7 @@
 'use client';
 
 import History from "./history";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Chat() {
   const [history, setHistory] = useState([
@@ -9,6 +9,16 @@ export default function Chat() {
     {type: 'bot', message: 'hi!'},
   ]);
   const [input, setInput] = useState('');
+  const div = useRef(null);
+
+  useEffect(() => {
+    if (history.length) {
+      div.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [history.length]);  
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -32,12 +42,13 @@ export default function Chat() {
     const data = await res.json();
   
     setHistory(prevHistory => prevHistory.concat([{type: 'bot', message: data.answer}]));
+    div.current.scrollIntoView({ behavior: "smooth", block: "end" })
   }
 
   return (
-    <div class="flex flex-col w-1/3">
+    <div className="flex flex-col w-1/2">
       <History items={history} />
-      <div className="w-2/3 pr-5">
+      <div className="w-2/3 pb-5" ref={div}>
         <input 
           className="bg-white appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-purple-500" 
           type="text" 
