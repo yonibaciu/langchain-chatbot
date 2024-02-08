@@ -22,7 +22,7 @@ export default function Chat() {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-      setHistory(history.concat([{type: 'user', message: input}]));
+      setHistory(prevHistory => prevHistory.concat([{type: 'user', message: input}]));
       setInput('');
 
       getAnswer(input);
@@ -32,6 +32,8 @@ export default function Chat() {
   async function getAnswer(input: string) {
     console.log(input);
 
+    setHistory(prevHistory => prevHistory.concat([{type: 'bot', message: 'loading...'}]));
+
     const res = await fetch('/api/question', {
       method: 'POST',
       headers: {
@@ -40,20 +42,22 @@ export default function Chat() {
       body: JSON.stringify({ q: input }),
     })
     const data = await res.json();
-  
-    setHistory(prevHistory => prevHistory.concat([{type: 'bot', message: data.answer}]));
-    div.current.scrollIntoView({ behavior: "smooth", block: "end" })
+
+    // remove 'loading...' message and add answer
+    setHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1).concat([{type: 'bot', message: data.answer}]));
+    div.current?.scrollIntoView({ behavior: "smooth", block: "end" })
   }
 
   return (
     <div className="flex flex-col w-1/2">
       <History items={history} />
-      <div className="w-2/3 pb-5" ref={div}>
+      <div className="flex items-center w-2/3 pb-5" ref={div}>
         <input 
           className="bg-white appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-purple-500" 
           type="text" 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
+          placeholder="Type message..."
           value={ input }
         />
       </div>
