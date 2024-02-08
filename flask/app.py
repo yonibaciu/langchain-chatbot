@@ -61,6 +61,10 @@ def load_example_docs():
 
   return "<p>Documents loaded!</p>"
 
+@app.route("/check")
+def check():
+  return jsonify(status='OK')
+
 @app.route("/load_webpage", methods = ['POST'])
 def load_webpage():
   data = request.json
@@ -80,14 +84,11 @@ def load_webpage():
 
   return jsonify(status='Webpage loaded')
 
-@app.route("/check")
-def check():
-  return jsonify(status='OK')
-
-@app.route("/question")
+@app.route("/question", methods = ['POST'])
 def question():
-  q = request.args.get('q', '')
+  data = request.json
+  question = data.get('q')
 
-  result = qa({"question": q})
+  result = qa({"question": question})
 
-  return f"<p>{result['answer']}</p>"
+  return jsonify(answer=result['answer'])
