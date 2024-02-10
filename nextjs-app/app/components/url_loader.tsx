@@ -1,24 +1,18 @@
 'use client';
 import { useState } from 'react';
+import { loadUrl } from '../actions';
 
 export default function UrlLoader() {
   const [input, setInput] = useState('');
-  const [load, setLoad] = useState('Load');
+  const [loading, setLoading] = useState(false);
 
-  async function loadUrl() {
-    setLoad('Loading...');
+  async function onClickUrl() {
+    setLoading(true);
     console.log(input);
 
-    const res = await fetch('/api/load_url', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url: input }),
-    })
-    const data = await res.json();
+    const data = await loadUrl(input);
   
-    setLoad('Load');
+    setLoading(false);
     setInput('');
   }
 
@@ -39,9 +33,9 @@ export default function UrlLoader() {
         <button 
           className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" 
           type="button"
-          onClick={ () => loadUrl() }
+          onClick={ () => onClickUrl() }
         >
-          { load }
+          { loading? 'Loading...' : 'Load' }
         </button>
       </div>
     </form>

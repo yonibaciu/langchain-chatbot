@@ -2,6 +2,7 @@
 
 import History from "./history";
 import { useState, useRef, useEffect } from 'react';
+import { askQuestion } from "../../actions";
 
 export default function Chat() {
   const [history, setHistory] = useState([
@@ -34,14 +35,7 @@ export default function Chat() {
 
     setHistory(prevHistory => prevHistory.concat([{type: 'bot', message: 'loading...'}]));
 
-    const res = await fetch('/api/question', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ q: input }),
-    })
-    const data = await res.json();
+    const data = await askQuestion(input);
 
     // remove 'loading...' message and add answer
     setHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1).concat([{type: 'bot', message: data.answer}]));
