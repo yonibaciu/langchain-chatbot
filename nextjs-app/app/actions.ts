@@ -1,13 +1,15 @@
 'use server';
 
+const FLASK_SERVER = 'http://localhost:5001';
+
 export async function askQuestion(question: string) {
-  const res = await fetch('http://localhost:5001/question', {
+  const res = await fetch(`${FLASK_SERVER}/question`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ q: question }),
-  })
+  });
  
   const data = await res.json()
  
@@ -15,13 +17,13 @@ export async function askQuestion(question: string) {
 }
 
 export async function loadUrl(url: string) {
-  const res = await fetch('http://localhost:5001/load_webpage', {
+  const res = await fetch(`${FLASK_SERVER}/load_webpage`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ url: url }),
-  })
+  });
  
   const data = await res.json()
  

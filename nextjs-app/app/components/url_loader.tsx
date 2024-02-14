@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { loadUrl } from '../actions';
+import { toast } from 'sonner';
 
 export default function UrlLoader() {
   const [input, setInput] = useState('');
@@ -10,10 +11,16 @@ export default function UrlLoader() {
     setLoading(true);
     console.log(input);
 
-    const data = await loadUrl(input);
-  
+    try {
+      const data = await loadUrl(input);
+      toast.success('Webpage loaded to vector DB');
+      setInput('');
+    }
+    catch (error) {
+      toast.error('Webpage failed to load');
+    }
+
     setLoading(false);
-    setInput('');
   }
 
   return (
