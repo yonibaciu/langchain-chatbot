@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-16">
-      <h1 className="text-2xl">RAG demonstation</h1>
+      <h1 className="text-2xl">RAG demonstration</h1>
       <p className="m-5">
         Retrieval Augmented Generation - Enter a webpage and chat with it's
         content!
