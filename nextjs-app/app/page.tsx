@@ -1,13 +1,13 @@
 import UrlLoader from "@/app/components/url_loader";
-import FlaskCheck from "@/app/components/flask_check";
+import FastAPICheck from "@/app/components/fastapi_check";
 import Chat from "@/app/components/chat/chat";
 import { Suspense } from "react";
 
 export default async function Home() {
-  const flaskLoadingFallback = () => {
+  const fastAPILoadingFallback = () => {
     return (
       <div className="flex items-center mb-6">
-        Checking Flask server...
+        Checking FastAPI server...
       </div>
     );
   }
@@ -19,9 +19,9 @@ export default async function Home() {
         Retrieval Augmented Generation - Enter a webpage and chat with it's
         content!
       </p>
-      <Suspense fallback={flaskLoadingFallback()}>
+      <Suspense fallback={fastAPILoadingFallback()}>
         {/* @ts-expect-error Server Component */}
-        <FlaskCheck />
+        <FastAPICheck />
       </Suspense>
       <UrlLoader />
       <Chat />

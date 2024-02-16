@@ -1,6 +1,3 @@
-from flask import Flask
-from flask import request
-from flask import jsonify
 import os
 from pinecone import Pinecone
 from langchain_openai import OpenAIEmbeddings
@@ -11,8 +8,10 @@ from langchain_community.vectorstores import Pinecone as PineconeStore
 from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from fastapi import FastAPI
+from pydantic import BaseModel
 
-app = Flask(__name__)
+app = FastAPI()
 
 pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
 index_name = "my-chatbot"
@@ -33,13 +32,13 @@ qa = ConversationalRetrievalChain.from_llm(
     memory=memory
 )
 
-@app.route("/")
-def hello_world():
-  return "<p>Hello, World!</p>"
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 
-@app.route("/load_example_docs")
-def load_example_docs():
+@app.get("/load_example_docs")
+async def load_example_docs():
   # Load PDFs
   loaders = [
       PyPDFLoader("docs/cnn article.pdf"),
@@ -59,16 +58,18 @@ def load_example_docs():
 
   vectorstore.add_documents(splits)
 
-  return "<p>Documents loaded!</p>"
+  return {"message": "Documents loaded!"}
 
-@app.route("/check")
-def check():
-  return jsonify(status='OK')
+@app.get("/check")
+async def check():
+  return {"status": "OK"}
 
-@app.route("/load_webpage", methods = ['POST'])
-def load_webpage():
-  data = request.json
-  page_url = data.get('url')
+class UrlData(BaseModel):
+  url: str
+
+@app.post("/load_webpage")
+async def load_webpage(url_data: UrlData):
+  page_url = url_data.url
   print(page_url)
   loader = WebBaseLoader(page_url)
   docs = loader.load()
@@ -82,13 +83,15 @@ def load_webpage():
 
   vectorstore.add_documents(splits)
 
-  return jsonify(status='Webpage loaded')
+  return {"status": "Webpage loaded"}
 
-@app.route("/question", methods = ['POST'])
-def question():
-  data = request.json
-  question = data.get('q')
+class QuestionData(BaseModel):
+  q: str
+
+@app.post("/question")
+def question(question_data: QuestionData):
+  question = question_data.q
 
   result = qa({"question": question})
 
-  return jsonify(answer=result['answer'])
+  return {"answer": result['answer']}

@@ -1,9 +1,9 @@
 'use server';
 
-const FLASK_SERVER = 'http://localhost:5001';
+const FASTAPI_SERVER = 'http://localhost:8000';
 
 export async function askQuestion(question: string) {
-  const res = await fetch(`${FLASK_SERVER}/question`, {
+  const res = await fetch(`${FASTAPI_SERVER}/question`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export async function askQuestion(question: string) {
 }
 
 export async function loadUrl(url: string) {
-  const res = await fetch(`${FLASK_SERVER}/load_webpage`, {
+  const res = await fetch(`${FASTAPI_SERVER}/load_webpage`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

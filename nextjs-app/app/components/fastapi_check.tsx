@@ -15,7 +15,7 @@ export default async function FlaskCheck() {
       const data = await res.json()
       return data.status;
     } catch (error) {
-      return 'NOT OK! Probaby the flask service is not running.';
+      return 'NOT OK! Probaby the FastAPI service is not running.';
     }
   }
 
@@ -25,7 +25,7 @@ export default async function FlaskCheck() {
 
   return (
     <div className="flex items-center mb-6">
-      Flask server status: {status}
+      FastAPI server status: {status}
     </div>
   );
 }

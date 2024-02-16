@@ -3,16 +3,16 @@
 This chatbot uses the following technologies
 - OpenAI LLM
 - Pinecone vector DB for RAG (Retrieval Augmented Generation)
-- Python Flask
+- Python FastAPI
 - NextJS
 - Tailwind CSS
 
 The langchain-chatbot has two components:
 
-- A flask service that interacts with OpenAI and Pinecone DB using langchain for RAG
-- A nextjs app for the UI which communicates with the flask service
+- A FastAPI service that interacts with OpenAI and Pinecone DB using langchain for RAG
+- A NextJS app for the UI which communicates with the FastAPI service
 
-## Flask service
+## FastAPI service
 
 Prerequisites:
 - You will need to setup an OpenAI account and set `OPENAI_API_KEY` env var locally
@@ -26,7 +26,7 @@ pip install -r requirements.txt
 To run:
 
 ```
-flask run --port=5001
+uvicorn main:app --reload
 ```
 
 ## NextJS app

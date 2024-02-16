@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Chatbot",
-  description: "Chatbot using nextjs, flask, pinecone and openai",
+  description: "Chatbot using NextJS, FastAPI, Pinecone DB and OpenAI",
 };
 
 export default function RootLayout({
