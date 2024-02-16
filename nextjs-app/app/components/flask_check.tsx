@@ -1,6 +1,11 @@
 export default async function FlaskCheck() {
+  function timeout(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async function check() {
     try {
+      await timeout(1000); // forcing a delay to see Suspense working
       const res = await fetch('http://localhost:5001/check', { cache: 'no-store' })
       if (!res.ok) {
         // This will activate the closest `error.js` Error Boundary
