@@ -33,12 +33,12 @@ qa = ConversationalRetrievalChain.from_llm(
 )
 
 @app.get("/")
-async def root():
+def root():
     return {"message": "Hello World"}
 
 
 @app.get("/load_example_docs")
-async def load_example_docs():
+def load_example_docs():
   # Load PDFs
   loaders = [
       PyPDFLoader("docs/cnn article.pdf"),
@@ -61,14 +61,14 @@ async def load_example_docs():
   return {"message": "Documents loaded!"}
 
 @app.get("/check")
-async def check():
+def check():
   return {"status": "OK"}
 
 class UrlData(BaseModel):
   url: str
 
 @app.post("/load_webpage")
-async def load_webpage(url_data: UrlData):
+def load_webpage(url_data: UrlData):
   page_url = url_data.url
   print(page_url)
   loader = WebBaseLoader(page_url)
