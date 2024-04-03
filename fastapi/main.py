@@ -9,9 +9,9 @@ from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-app = FastAPI()
+app = FastAPI(title="LangChain App")
 
 pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
 index_name = "my-chatbot"
@@ -39,6 +39,9 @@ def root():
 
 @app.get("/load_example_docs")
 def load_example_docs():
+  """
+  Load example documents for testing purposes.
+  """
   # Load PDFs
   loaders = [
       PyPDFLoader("docs/cnn article.pdf"),
@@ -60,8 +63,11 @@ def load_example_docs():
 
   return {"message": "Documents loaded!"}
 
+class ReturnStatus(BaseModel):
+  status: str = Field(example="OK")
+
 @app.get("/check")
-def check():
+def check() -> ReturnStatus:
   return {"status": "OK"}
 
 class UrlData(BaseModel):
@@ -69,6 +75,9 @@ class UrlData(BaseModel):
 
 @app.post("/load_webpage")
 def load_webpage(url_data: UrlData):
+  """
+  Load a webpage and split it into chunks of text then store in PineconeDB
+  """
   page_url = url_data.url
   print(page_url)
   loader = WebBaseLoader(page_url)
