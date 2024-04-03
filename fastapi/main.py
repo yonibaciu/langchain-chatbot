@@ -4,7 +4,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Pinecone as PineconeStore
+from langchain_pinecone import PineconeVectorStore
 from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
@@ -16,7 +16,7 @@ app = FastAPI(title="LangChain App")
 pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
 index_name = "my-chatbot"
 embeddings = OpenAIEmbeddings()
-vectorstore = PineconeStore(pc.Index(index_name), embeddings, 'text')
+vectorstore = PineconeVectorStore(pc.Index(index_name), embeddings, 'text')
 llm = ChatOpenAI(
     openai_api_key=os.environ['OPENAI_API_KEY'],
     model_name='gpt-3.5-turbo',
